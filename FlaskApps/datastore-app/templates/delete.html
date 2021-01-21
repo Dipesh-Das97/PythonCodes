@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>
-        LOGIN PAGE
-    </title>
+    <meta charset="UTF-8">
+    <title>DELETE ACCOUNT</title>
 </head>
 <body>
-    <p>LOGIN PLEASE</p>
-    <form action = "/homepage/login" method = "POST">
+    <p>
+        Please enter your UserId and password to delete
+    </p>
+    <form action = "/homepage/delete" method = "POST">
     <div>
         <input type="text" id="email" name="email" placeholder="Enter userId" required>
         <br>
@@ -18,11 +19,7 @@
         <br>
         <br>
     </div>
-    <button type="submit">LogIn</button>
+    <button type="submit">Delete</button>
     </form>
-    <br>
-    <a href = "/homepage/signup">SignUp</a>
-    <br>
-    <a href = "/homepage/forgotpassword">Forgot Password</a>
 </body>
 </html>

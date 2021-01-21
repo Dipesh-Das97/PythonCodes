@@ -61,5 +61,28 @@ def logoutpage():
     return render_template('logout.html')
 
 
+@app.route('/homepage/forgotpassword', methods=["GET", "POST"])
+def forgotpass():
+    if request.method == "POST":
+        with client.transaction():
+            key = client.key("AUTH", request.form["email"])
+            entity = client.get(key)
+            if not entity.get("email") == request.form["email"] and request.form["password"]:
+                return "Wrong Email or enter new password again"
+            entity["password"] = request.form["password"]
+            client.put(entity)
+        return redirect('/homepage/login')
+    return render_template("forgotpassword.html")
+
+
+@app.route('/homepage/delete', methods=["GET", "POST"])
+def removeacc():
+    if request.method == "POST":
+        key = client.key("AUTH", request.form["email"])
+        client.delete(key)
+        return redirect('/homepage')
+    return render_template("delete.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
