@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, current_app, request, redirect
+from flask_talisman import Talisman
 import logging
 from google.cloud import datastore
 client = datastore.Client()
 logging.basicConfig(level=logging.DEBUG)
 forgotpasswordpage = Blueprint("forgotpasswordpage", __name__, template_folder="templates")
-
+talisman = Talisman()
 
 """
     This page lets a user change the password of a user if password forgotten.
@@ -14,6 +15,7 @@ forgotpasswordpage = Blueprint("forgotpasswordpage", __name__, template_folder="
 
 
 @forgotpasswordpage.route('/homepage/forgotpassword', methods=["GET", "POST"])
+@talisman(strict_transport_security=True)
 def forgotpassview():
     if request.method == "POST":
         with client.transaction():

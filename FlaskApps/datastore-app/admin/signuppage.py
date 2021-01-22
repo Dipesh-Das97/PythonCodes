@@ -1,11 +1,13 @@
 from flask import Blueprint, render_template, current_app, request, redirect
 from flask_bcrypt import Bcrypt
+from flask_talisman import Talisman
 import logging
 from google.cloud import datastore
 client = datastore.Client()
 logging.basicConfig(level=logging.DEBUG)
 signuppage = Blueprint("signuppage", __name__, template_folder="templates")
 bcrypt = Bcrypt()
+talisman = Talisman()
 
 
 """
@@ -21,6 +23,7 @@ bcrypt = Bcrypt()
 
 
 @signuppage.route('/homepage/signup', methods=["GET", "POST"])
+@talisman(strict_transport_security=True)
 def signuppageview():
     if request.method == "POST":
         with client.transaction():

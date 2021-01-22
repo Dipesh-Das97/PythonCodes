@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, current_app, request, redirect
+from flask_talisman import Talisman
 import logging
 from google.cloud import datastore
 client = datastore.Client()
 logging.basicConfig(level=logging.DEBUG)
 deletepage = Blueprint("deletepage", __name__, template_folder="templates")
+talisman = Talisman()
 
 """
     input from form:
@@ -16,6 +18,7 @@ deletepage = Blueprint("deletepage", __name__, template_folder="templates")
 
 
 @deletepage.route('/homepage/delete', methods=["GET", "POST"])
+@talisman(strict_transport_security=True)
 def removeacc():
     if request.method == "POST":
         key = client.key("AUTH", request.form["email"])

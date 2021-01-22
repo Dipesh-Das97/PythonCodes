@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, current_app, request, redirect, url_for, session
 from flask_bcrypt import Bcrypt
+from flask_talisman import Talisman
 import logging
 from google.cloud import datastore
 import datetime
@@ -7,7 +8,7 @@ client = datastore.Client()
 logging.basicConfig(level=logging.DEBUG)
 loginpage = Blueprint("loginpage", __name__, template_folder="templates")
 bcrypt = Bcrypt()
-
+talisman = Talisman()
 """
     loginpageview() handles the login: For eg: Input in form is: 
     {
@@ -24,6 +25,7 @@ bcrypt = Bcrypt()
 
 
 @loginpage.route('/homepage/login', methods=["GET", "POST"])
+@talisman(strict_transport_security=True)
 def loginpageview():
     if request.method == "POST":
         key = client.key("AUTH", request.form["email"])
@@ -42,6 +44,7 @@ def loginpageview():
 
 
 @loginpage.route('/homepage/postlogin')
+@talisman(strict_transport_security=True)
 def postlog():
     if "user" in session:
         current_app.logger.info('Available session cookies: %s', session["user"])

@@ -1,5 +1,4 @@
-from flask import Blueprint, render_template, Response
-response = Response()
+from flask import Blueprint, render_template
 errorhandlerpage = Blueprint("errorhandlerpage", __name__, template_folder="templates")
 
 
@@ -10,11 +9,9 @@ errorhandlerpage = Blueprint("errorhandlerpage", __name__, template_folder="temp
 
 @errorhandlerpage.app_errorhandler(404)
 def pagenotfound(e):
-    current_app.logger.info('Response header linked: %s', response.headers)
     return render_template("errorhandler.html")
 
 
 @errorhandlerpage.app_errorhandler(500)
 def servererror(e):
-    current_app.logger.info('Response header linked: %s', response.headers)
     return render_template("servererror.html")
