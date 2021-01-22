@@ -1,14 +1,15 @@
 from flask import Blueprint, render_template, current_app, request, redirect, url_for, session
+from functools import wraps
 from flask_bcrypt import Bcrypt
 from flask_talisman import Talisman
-import logging
 from google.cloud import datastore
+import logging
 import datetime
-client = datastore.Client()
 logging.basicConfig(level=logging.DEBUG)
 loginpage = Blueprint("loginpage", __name__, template_folder="templates")
 bcrypt = Bcrypt()
 talisman = Talisman()
+client = datastore.Client()
 """
     loginpageview() handles the login: For eg: Input in form is: 
     {
@@ -22,6 +23,15 @@ talisman = Talisman()
     postlog() handles checking for a session cookie generated and redirects users to the login page 
     if not logged in
 """
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function():
+        if session["user"] is None:
+            return redirect('/homepage/login')
+        return render_template("postlogin.html")
+    return decorated_function
 
 
 @loginpage.route('/homepage/login', methods=["GET", "POST"])
@@ -45,8 +55,6 @@ def loginpageview():
 
 @loginpage.route('/homepage/postlogin')
 @talisman(strict_transport_security=True)
+@login_required
 def postlog():
-    if "user" in session:
-        current_app.logger.info('Available session cookies: %s', session["user"])
-        return render_template("postlogin.html")
-    return redirect('/homepage/login')
+    pass
