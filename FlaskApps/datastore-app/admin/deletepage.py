@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, current_app, request, redirect
 from flask_talisman import Talisman
 import logging
+from helpers import data
 from google.cloud import datastore
 client = datastore.Client()
 logging.basicConfig(level=logging.DEBUG)
@@ -21,8 +22,8 @@ talisman = Talisman()
 @talisman(strict_transport_security=True)
 def removeacc():
     if request.method == "POST":
-        key = client.key("AUTH", request.form["email"])
-        client.delete(key)
+        task = data.Loginbase(request.form["email"])
+        task.deleteacc()
         current_app.logger.info('Deleted user account')
         return redirect('/homepage')
     return render_template("delete.html")

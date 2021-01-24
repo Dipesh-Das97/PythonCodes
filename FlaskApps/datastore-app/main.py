@@ -20,4 +20,4 @@ app.register_blueprint(deletepage)
 app.register_blueprint(errorhandlerpage)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
