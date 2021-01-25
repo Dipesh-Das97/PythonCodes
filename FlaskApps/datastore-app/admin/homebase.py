@@ -1,20 +1,21 @@
-from flask import Blueprint, render_template, current_app
-from flask_talisman import Talisman
+from flask import Blueprint, render_template, current_app, Response
 import logging
 logging.basicConfig(level=logging.DEBUG)
 homebase = Blueprint("homebase", __name__, template_folder="templates")
-talisman = Talisman()
+resp = Response()
 
 
 @homebase.route('/')
-@talisman(strict_transport_security=True)
 def home():
+    resp.headers['Strict-Transport-Security'] = 'max-age=31536000'
+    current_app.logger.info(resp.headers)
     current_app.logger.info('Starting point of app')
     return render_template('home.html')
 
 
 @homebase.route('/homepage')
-@talisman(strict_transport_security=True)
 def homepage():
+    resp.headers['Strict-Transport-Security'] = 'max-age=31536000'
+    current_app.logger.info(resp.headers)
     current_app.logger.info('Homepage of app')
     return render_template('homepage.html')

@@ -1,12 +1,11 @@
-from flask import Blueprint, render_template, current_app, request, redirect
-from flask_talisman import Talisman
+from flask import Blueprint, render_template, current_app, request, redirect, Response
 import logging
 from helpers import data
 from google.cloud import datastore
 client = datastore.Client()
 logging.basicConfig(level=logging.DEBUG)
 deletepage = Blueprint("deletepage", __name__, template_folder="templates")
-talisman = Talisman()
+resp = Response()
 
 """
     input from form:
@@ -19,9 +18,10 @@ talisman = Talisman()
 
 
 @deletepage.route('/homepage/delete', methods=["GET", "POST"])
-@talisman(strict_transport_security=True)
 def removeacc():
     if request.method == "POST":
+        resp.headers['Strict-Transport-Security'] = 'max-age=31536000'
+        current_app.logger.info(resp.headers)
         task = data.Loginbase(request.form["email"])
         task.deleteacc()
         current_app.logger.info('Deleted user account')

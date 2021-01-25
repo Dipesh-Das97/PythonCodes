@@ -1,10 +1,9 @@
-from flask import Blueprint, render_template, current_app, request, redirect
-from flask_talisman import Talisman
+from flask import Blueprint, render_template, current_app, request, redirect, Response
 import logging
 from helpers import data
 logging.basicConfig(level=logging.DEBUG)
 forgotpasswordpage = Blueprint("forgotpasswordpage", __name__, template_folder="templates")
-talisman = Talisman()
+resp = Response()
 
 """
     This page lets a user change the password of a user if password forgotten.
@@ -14,9 +13,10 @@ talisman = Talisman()
 
 
 @forgotpasswordpage.route('/homepage/forgotpassword', methods=["GET", "POST"])
-@talisman(strict_transport_security=True)
 def forgotpassview():
     if request.method == "POST":
+        resp.headers['Strict-Transport-Security'] = 'max-age=31536000'
+        current_app.logger.info(resp.headers)
         task = data.ForgotPassword(request.form["email"], request.form["password"])
         entity = task.forgotpassword()
         current_app.logger.info('After creating new password %s', entity)

@@ -1,14 +1,14 @@
-from flask import Blueprint, render_template, current_app, request, redirect, url_for, session
+from flask import Blueprint, render_template, current_app, request, redirect, url_for, session, Response
 from functools import wraps
 from flask_bcrypt import Bcrypt
-from flask_talisman import Talisman
 from helpers import data
 import logging
 import datetime
 logging.basicConfig(level=logging.DEBUG)
 loginpage = Blueprint("loginpage", __name__, template_folder="templates")
 bcrypt = Bcrypt()
-talisman = Talisman()
+resp = Response()
+
 """
     loginpageview() handles the login: For eg: Input in form is: 
     {
@@ -45,9 +45,10 @@ def login_required(f):
 
 
 @loginpage.route('/homepage/login', methods=["GET", "POST"])
-@talisman(strict_transport_security=True)
 def loginpageview():
     if request.method == "POST":
+        resp.headers['Strict-Transport-Security'] = 'max-age=31536000'
+        current_app.logger.info(resp.headers)
         task = data.Loginbase(request.form["email"])
         entity = task.logininfo()
         current_app.logger.info('Details fetched: %s', entity)
@@ -64,7 +65,8 @@ def loginpageview():
 
 
 @loginpage.route('/homepage/postlogin')
-@talisman(strict_transport_security=True)
 @login_required
 def postlog():
+    resp.headers['Strict-Transport-Security'] = 'max-age=31536000'
+    current_app.logger.info(resp.headers)
     pass
